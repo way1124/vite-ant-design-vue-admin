@@ -11,12 +11,10 @@
         <right-content :top-menu="layout === 'topmenu'" :is-mobile="isMobile" :theme="theme" />
       </a-layout-header>
       <a-layout-content class="vite-content">
-        <!-- <router-view v-slot="{ Component }">
-          <transition name="slide-right" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view> -->
-        <user-layout></user-layout>
+        <basic-link style="flex: 1;" />
+        <a-layout-footer style="text-align: center">
+          ©2021 Created by Vexth
+        </a-layout-footer>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -24,9 +22,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRaw } from "vue";
-
+import { RouteRecordRaw } from 'vue-router';
 import AppMenu from "./menu.vue";
-import UserLayout from "./UserLayout.vue";
+import BasicLink from "./BasicLink.vue";
 
 import { RightContent } from "@/components/GlobalHeader";
 
@@ -34,11 +32,20 @@ import { routes } from "@/router";
 
 import defaultSettings from "@/config/settings";
 
+function getRoutes(routes: RouteRecordRaw[]) {
+  return routes.filter((r) => r.meta && !r.meta.hidden).map(r => {
+    if (r.children && r.children.length !== 0) {
+      r.children = getRoutes(r.children)
+    }
+    return r
+  })
+}
+
 export default defineComponent({
   name: "BasicLayout",
   components: {
     AppMenu,
-    UserLayout,
+    BasicLink,
     RightContent,
   },
   setup() {
@@ -49,7 +56,8 @@ export default defineComponent({
       theme: defaultSettings.navTheme,
       // 是否手机模式
       isMobile: false,
-      menus: routes.filter((r) => r.meta && !r.meta.hidden),
+      // menus: routes.filter((r) => r.meta && !r.meta.hidden),
+      menus: getRoutes(routes)
     })
     return {
       ...toRaw(settings),
@@ -59,35 +67,39 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="less" scoped>
+
 #vite-layout {
   height: inherit;
-}
-#vite-layout .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
+  // min-height: 100vh;
 
-#vite-layout .trigger:hover {
-  color: #1890ff;
-}
+  .logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 16px;
+  }
 
-#vite-layout .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
-}
+  .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+    &:hover {
+      color: #1890ff;
+    }
+  }
 
-#vite-layout .vite-content {
-  /* margin: 24px 16px; */
-  padding: 24px;
-  /* background: rgb(255, 255, 255); */
-  min-height: 280px;
-  overflow-y: auto;
-  transition: all 0.2s;
+  .vite-content {
+    display: flex;
+    flex-direction: column;
+    /* margin: 24px 16px; */
+    padding: 24px;
+    /* background: rgb(255, 255, 255); */
+    min-height: 280px;
+    overflow-y: auto;
+    transition: all 0.2s;
+  }
 }
 
 .vite-content::-webkit-scrollbar {

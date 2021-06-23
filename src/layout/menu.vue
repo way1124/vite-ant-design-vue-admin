@@ -1,7 +1,7 @@
 <template>
   <a-menu theme="dark" mode="inline" :openKeys="openKeys" v-model:selectedKeys="selectedKeys" @openChange="onOpenChange">
     <template v-for="r in menus" :key="r.path">
-      <app-menu-item v-if="!r.children" :route="r" />
+      <app-menu-item v-if="!(r.children && r.children.length !== 0)" :route="r" />
       <app-sub-menu v-else :route="r" />
     </template>
   </a-menu>
@@ -9,20 +9,15 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, PropType } from "vue";
-import { RouteRecordRaw, useRouter } from "vue-router";
+import { RouteRecordRaw, useRouter, RouteLocationNormalizedLoaded } from "vue-router";
 
 import AppMenuItem from "./menuItem.vue";
 import AppSubMenu from "./subMenu.vue";
 
 function getPath() {
-  const path: string = useRouter().currentRoute.value.path
-  const pathList = path.split('/')
-  pathList.pop()
-  const openKey = '/' + pathList.join('')
-  return {
-    path,
-    openKey
-  }
+  const value: RouteLocationNormalizedLoaded = useRouter().currentRoute.value
+  const matched: string[] = value.matched.map(r => r.path)
+  return matched
 }
 
 export default defineComponent({
@@ -39,7 +34,7 @@ export default defineComponent({
     
   },
   setup(props) {
-    const { path, openKey } = getPath()
+    const matched = getPath()
 
     const state = reactive({
       rootSubmenuKeys: props.menus.map((r) => {
@@ -47,8 +42,8 @@ export default defineComponent({
           return r.path;
         }
       }),
-      openKeys: [openKey],
-      selectedKeys: [path],
+      openKeys: matched,
+      selectedKeys: matched,
     });
     const onOpenChange = (openKeys: string[]) => {
       const latestOpenKey = openKeys.find(

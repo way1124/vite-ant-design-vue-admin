@@ -83,6 +83,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: "/form",
+    name: 'form',
     component: BasicLayout,
     meta: {
       icon: "FormOutlined",
@@ -92,6 +93,7 @@ export const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "/form/basicForm",
+        name: "basicForm",
         meta: {
           icon: "",
           title: "basicForm",
@@ -100,6 +102,7 @@ export const routes: RouteRecordRaw[] = [
       },
       {
         path: "/form/stepForm",
+        name: "stepForm",
         meta: {
           icon: "",
           title: "stepForm",
@@ -110,15 +113,17 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: "/account",
+    name: 'account',
     component: BasicLayout,
     meta: {
       icon: "UserOutlined",
-      title: "user",
+      title: "account",
     },
     redirect: '/account/center',
     children: [
       {
         path: "/account/center",
+        name: "center",
         meta: {
           icon: "",
           title: "center",
@@ -127,11 +132,58 @@ export const routes: RouteRecordRaw[] = [
       },
       {
         path: "/account/settings",
+        name: "settings",
         meta: {
           icon: "",
           title: "settings",
         },
         component: () => import("@/views/Account/settings/index.vue"),
+        redirect: '/account/settings/base',
+        children: [
+          {
+            path: '/account/settings/base',
+            name: "BaseSettings",
+            component: () => import("@/views/Account/settings/BaseSetting.vue"),
+            meta: {
+              // hidden: true,
+              title: "基本设置",
+            }
+          },
+          // {
+          //   path: '/account/settings/security',
+          //   name: "SecuritySettings",
+          //   component: () => import("@/views/Account/settings/Security.vue"),
+          //   meta: {
+          //     hidden: true,
+          //   }
+          // },
+          // {
+          //   path: '/account/settings/custom',
+          //   name: "CustomSettings",
+          //   component: () => import("@/views/Account/settings/Custom.vue"),
+          //   meta: {
+          //     hidden: true,
+          //   }
+          // },
+          {
+            path: '/account/settings/binding',
+            name: "BindingSettings",
+            component: () => import("@/views/Account/settings/Binding.vue"),
+            meta: {
+              hidden: true,
+              title: '账户绑定'
+            }
+          },
+          {
+            path: '/account/settings/notification',
+            name: "NotificationSettings",
+            component: () => import("@/views/Account/settings/Notification.vue"),
+            meta: {
+              hidden: true,
+              title: '新消息通知'
+            }
+          },
+        ]
       },
     ],
   },

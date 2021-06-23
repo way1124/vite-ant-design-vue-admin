@@ -6,9 +6,9 @@
           <a-menu
             :mode="device == 'mobile' ? 'horizontal' : 'inline'"
             :style="{ border: '0', width: device == 'mobile' ? '560px' : 'auto'}"
-            :selectedKeys="selectedKeys"
+            v-model:openKeys="state.openKeys"
+            v-model:selectedKeys="state.selectedKeys"
             type="inner"
-            @openChange="onOpenChange"
           >
             <a-menu-item key="/account/settings/base">
               <router-link :to="{ name: 'BaseSettings' }">
@@ -16,22 +16,22 @@
               </router-link>
             </a-menu-item>
             <a-menu-item key="/account/settings/security">
-              <router-link :to="{ name: 'SecuritySettings' }">
+              <router-link to="/account/settings/security">
                 安全设置
               </router-link>
             </a-menu-item>
             <a-menu-item key="/account/settings/custom">
-              <router-link :to="{ name: 'CustomSettings' }">
+              <router-link to="/account/settings/custom">
                 个性化
               </router-link>
             </a-menu-item>
             <a-menu-item key="/account/settings/binding">
-              <router-link :to="{ name: 'BindingSettings' }">
+              <router-link to="/account/settings/binding">
                 账户绑定
               </router-link>
             </a-menu-item>
             <a-menu-item key="/account/settings/notification">
-              <router-link :to="{ name: 'NotificationSettings' }">
+              <router-link to="/account/settings/notification">
                 新消息通知
               </router-link>
             </a-menu-item>
@@ -41,30 +41,30 @@
           <div class="account-settings-info-title">
             <span>{{ $route.meta.title }}</span>
           </div>
-          <route-view></route-view>
+          <basic-link />
         </div>
       </div>
     </a-card>
   </div>
 </template>
 
-<script>
-import { PageView, RouteView } from '@/layouts'
-import { mixinDevice } from '@/utils/mixin.js'
+<script lang="ts">
+import { defineComponent, reactive, ref, watch } from 'vue';
+import { Router, useRouter } from 'vue-router';
 
-export default {
-  components: {
-    RouteView,
-    PageView
-  },
-  mixins: [mixinDevice],
-  data () {
-    return {
+import BasicLink from "@/layout/BasicLink.vue";
+
+export default defineComponent({
+  components: { BasicLink },
+  setup() {
+    const router: Router = useRouter()
+    console.log(router.currentRoute.value.path)
+    const state = reactive({
       // horizontal  inline
       mode: 'inline',
 
-      openKeys: [],
-      selectedKeys: [],
+      openKeys: [router.currentRoute.value.path],
+      selectedKeys: [router.currentRoute.value.path],
 
       // cropper
       preview: {},
@@ -83,28 +83,61 @@ export default {
         fixed: true,
         fixedNumber: [1, 1]
       },
-
       pageTitle: ''
-    }
-  },
-  mounted () {
-    this.updateMenu()
-  },
-  methods: {
-    onOpenChange (openKeys) {
-      this.openKeys = openKeys
-    },
-    updateMenu () {
-      const routes = this.$route.matched.concat()
-      this.selectedKeys = [ routes.pop().path ]
-    }
-  },
-  watch: {
-    '$route' (val) {
-      this.updateMenu()
+    })
+
+    return {
+      device: ref<string>('desktop'),
+      state,
     }
   }
-}
+  // data () {
+  //   return {
+  //     // horizontal  inline
+  //     mode: 'inline',
+
+  //     openKeys: [],
+  //     selectedKeys: [],
+
+  //     // cropper
+  //     preview: {},
+  //     option: {
+  //       img: '/avatar2.jpg',
+  //       info: true,
+  //       size: 1,
+  //       outputType: 'jpeg',
+  //       canScale: false,
+  //       autoCrop: true,
+  //       // 只有自动截图开启 宽度高度才生效
+  //       autoCropWidth: 180,
+  //       autoCropHeight: 180,
+  //       fixedBox: true,
+  //       // 开启宽度和高度比例
+  //       fixed: true,
+  //       fixedNumber: [1, 1]
+  //     },
+
+  //     pageTitle: ''
+  //   }
+  // },
+  // mounted () {
+  //   this.updateMenu()
+  // },
+  // methods: {
+  //   onOpenChange (openKeys) {
+  //     this.openKeys = openKeys
+  //   },
+  //   updateMenu () {
+  //     const routes = this.$route.matched.concat()
+  //     this.selectedKeys = [ routes.pop().path ]
+  //   }
+  // },
+  // watch: {
+  //   '$route' (val) {
+  //     this.updateMenu()
+  //   }
+  // }
+})
 </script>
 
 <style lang="less" scoped>

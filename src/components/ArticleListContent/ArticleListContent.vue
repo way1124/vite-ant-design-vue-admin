@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts">
+
 import moment from 'moment'
-import { defineComponent, toRaw } from 'vue';
+import { defineComponent, PropType, toRaw } from 'vue';
 
 function getMoment(dataStr: string, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dataStr).format(pattern)
@@ -24,27 +25,27 @@ export default defineComponent({
   name: 'ArticleListContent',
   props: {
     prefixCls: {
-      type: String,
+      type: String as PropType<String>,
       default: 'antd-pro-components-article-list-content-index-listContent'
     },
     description: {
-      type: String,
+      type: String as PropType<String>,
       default: ''
     },
     owner: {
-      type: String,
+      type: String as PropType<String>,
       required: true
     },
     avatar: {
-      type: String,
+      type: String as PropType<String>,
       required: true
     },
     href: {
-      type: String,
+      type: String as PropType<String>,
       required: true
     },
     updateAt: {
-      type: String,
+      type: String as PropType<String>,
       required: true
     }
   },
@@ -58,12 +59,12 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-@import "~ant-design-vue/lib/style/index";
+// @import "~ant-design-vue/lib/style/index";
 
 // The prefix to use on all css classes from ant-pro.
-@ant-pro-prefix             : ant-pro;
-@ant-global-sider-zindex    : 106;
-@ant-global-header-zindex   : 105;
+// @ant-pro-prefix             : ant-pro;
+// @ant-global-sider-zindex    : 106;
+// @ant-global-header-zindex   : 105;
 
 .antd-pro-components-article-list-content-index-listContent {
   .description {
@@ -72,10 +73,10 @@ export default defineComponent({
   }
   .extra {
     margin-top: 16px;
-    color: @text-color-secondary;
+    color: rgba(0,0,0,.45);
     line-height: 22px;
 
-    & /deep/ .ant-avatar {
+    & :deep(.ant-avatar) {
       position: relative;
       top: 1px;
       width: 20px;
@@ -86,13 +87,13 @@ export default defineComponent({
 
     & > em {
       margin-left: 16px;
-      color: @disabled-color;
+      color: rgba(0,0,0,.25);
       font-style: normal;
     }
   }
 }
 
-@media screen and (max-width: @screen-xs) {
+@media screen and (max-width: 480px) {
   .antd-pro-components-article-list-content-index-listContent {
     .extra {
       & > em {

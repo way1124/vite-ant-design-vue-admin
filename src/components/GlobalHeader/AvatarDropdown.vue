@@ -54,10 +54,10 @@ export default defineComponent({
     const currentUser = ref<string>(state.user.currentAuthority)
 
     const handleToCenter = () => {
-      // this.$router.push({ path: '/account/center' })
+      router.push({ path: '/account/center' })
     }
     const handleToSettings = () => {
-      // this.$router.push({ path: '/account/settings' })
+      router.push({ path: '/account/settings' })
     }
     const handleLogout = (e: MouseEvent) => {
       // console.log(e)

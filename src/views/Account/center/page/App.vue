@@ -31,18 +31,18 @@
             </a-card-meta>
             <template class="ant-card-actions" #actions>
               <a>
-                <a-icon type="download" />
+                <DownloadOutlined />
               </a>
               <a>
-                <a-icon type="edit" />
+                <EditOutlined />
               </a>
               <a>
-                <a-icon type="share-alt" />
+                <ShareAltOutlined />
               </a>
               <a>
                 <a-dropdown>
                   <a class="ant-dropdown-link" href="javascript:;">
-                    <a-icon type="ellipsis" />
+                    <EllipsisOutlined />
                   </a>
                   <template v-slot:overlay>
                     <a-menu>
@@ -68,7 +68,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
+
+import { get } from "@/utils/request";
 
 function NumberFormat(value: number) {
   if (!value) {
@@ -84,20 +86,18 @@ type ISource = {
   activeUser: number;
   newUser: number;
 };
-const dataSource: ISource[] = [];
-for (let i = 0; i < 11; i++) {
-  dataSource.push({
-    title: "Alipay",
-    avatar:
-      "https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png",
-    activeUser: 17,
-    newUser: 1700,
-  });
-}
 
 export default defineComponent({
-  name: "Article",
+  name: "AppPage",
   setup() {
+    const dataSource = ref<ISource[]>([])
+    const getFakeList = () => {
+      get<ISource[]>('/api/fake_list').then(r => {
+        dataSource.value = r
+      })
+    }
+    onMounted(getFakeList)
+    
     return {
       dataSource,
       NumberFormat,

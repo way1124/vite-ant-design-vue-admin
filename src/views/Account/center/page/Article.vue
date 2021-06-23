@@ -2,16 +2,16 @@
   <a-list
     size="large"
     rowKey="id"
-    :loading="loading"
+    :loading="state.loading"
     itemLayout="vertical"
-    :dataSource="data"
+    :dataSource="state.data"
   >
     <template #renderItem="{ item }">
       <a-list-item :key="item.id">
         <template #actions>
-          <icon-text type="star-o" :text="item.star" />
-          <icon-text type="like-o" :text="item.like" />
-          <icon-text type="message" :text="item.message" />
+          <icon-text type="StarOutlined" :text="item.star" />
+          <icon-text type="LikeOutlined" :text="item.like" />
+          <icon-text type="MessageOutlined" :text="item.message" />
         </template>
         <a-list-item-meta>
           <template #title>
@@ -34,23 +34,18 @@
         />
       </a-list-item>
     </template>
-    <template #footer>
-      <div v-if="data.length > 0" style="text-align: center; margin-top: 16px">
-        <a-button @click="loadMore" :loading="loadingMore">加载更多</a-button>
-      </div>
-    </template>
   </a-list>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import ArticleListContent from "@/components/ArticleListContent";
+import { defineComponent, onMounted, reactive, toRaw } from 'vue';
+import { ArticleListContent } from "@/components/ArticleListContent";
 import IconText from "./IconText.vue";
 
 import { get } from "@/utils/request";
 
 interface IArticle {
-  id: number;
+  id: string;
   description: string;
   owner: string;
   avatar: string;
@@ -62,38 +57,36 @@ interface IArticle {
   title: string;
 }
 
-const dataSource: IArticle[] = [];
-for (let i = 0; i < 11; i++) {
-  dataSource.push({
-    // title: "Alipay",
-    // avatar:
-    //   "https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png",
-    // activeUser: 17,
-    // newUser: 1700,
-    id: i,
-    description: "string;",
-    owner: "string;",
-    avatar: "string;",
-    href: "string;",
-    updatedAt: "string;",
-    star: "string;",
-    like: "string;",
-    message: "string;",
-    title: "string;",
-  });
+interface IState {
+  loading: boolean;
+  loadingMore: boolean;
+  data: IArticle[];
 }
 
 export default defineComponent({
-  name: "Article",
+  name: "ArticlePage",
   components: {
     IconText,
     ArticleListContent,
   },
   setup() {
-    return {
+    const state = reactive<IState>({
       loading: true,
       loadingMore: false,
-      data: dataSource,
+      data: [],
+    })
+
+    const getFakeList = () => {
+      get<IArticle[]>('/api/fake_list').then(r => {
+        state.data = r
+        state.loading = false
+      })
+    }
+
+    onMounted(getFakeList)
+
+    return {
+      state
     }
   },
 });

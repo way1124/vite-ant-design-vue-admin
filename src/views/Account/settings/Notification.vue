@@ -1,23 +1,17 @@
 <template>
-  <a-list
-    itemLayout="horizontal"
-    :dataSource="data"
-  >
-
+  <a-list itemLayout="horizontal" :dataSource="data">
   </a-list>
 </template>
 
-<script>
-export default {
-  data () {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  setup() {
     return {
       data: []
     }
-  },
-  methods: {
-
   }
-}
+})
 </script>
 
 <style scoped>
