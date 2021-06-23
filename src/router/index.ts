@@ -38,6 +38,17 @@ export const constantRouterMap: RouteRecordRaw[] = [
   }
 ]
 
+// function getModules() {
+//   const components = import.meta.glob('@/views/**/*.vue')
+//   return components
+// }
+// function getComponents() {
+//   const components = import.meta.globEager('@/views/**/*.vue')
+//   return components
+// }
+
+// console.log(getModules(), getComponents())
+
 interface ITreeRoute {
   path: string;
   component: string;
@@ -77,7 +88,7 @@ export const routes: RouteRecordRaw[] = [
           icon: "",
           title: "TestWork",
         },
-        component: () => import("@/views/Dashboard/TestWork.vue"),
+        component: () => import("@/views/Dashboard/TestWork/index.vue"),
       },
     ],
   },
@@ -98,7 +109,7 @@ export const routes: RouteRecordRaw[] = [
           icon: "",
           title: "basicForm",
         },
-        component: () => import("@/views/Form/basicForm.vue"),
+        component: () => import("@/views/Form/basicForm/index.vue"),
       },
       {
         path: "/form/stepForm",
@@ -107,7 +118,7 @@ export const routes: RouteRecordRaw[] = [
           icon: "",
           title: "stepForm",
         },
-        component: () => import("@/views/Form/stepForm.vue"),
+        component: () => import("@/views/Form/stepForm/index.vue"),
       },
     ],
   },

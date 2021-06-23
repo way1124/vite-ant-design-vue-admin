@@ -13,4 +13,12 @@ export default defineConfig({
     jsxFragment: "Fragment",
     jsxInject: "import { h } from 'vue';",
   },
+  css: {
+    preprocessorOptions: {
+      less: {
+        // 支持内联 JavaScript
+        javascriptEnabled: true,
+      }
+    }
+  },
 });

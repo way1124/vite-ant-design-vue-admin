@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, PropType } from "vue";
-import { RouteRecordRaw, useRouter, RouteLocationNormalizedLoaded } from "vue-router";
+import { RouteRecordRaw, useRouter, RouteLocationNormalizedLoaded, onBeforeRouteUpdate } from "vue-router";
 
 import AppMenuItem from "./menuItem.vue";
 import AppSubMenu from "./subMenu.vue";
@@ -55,6 +55,10 @@ export default defineComponent({
         state.openKeys = latestOpenKey ? [latestOpenKey] : [];
       }
     };
+
+    onBeforeRouteUpdate(to => {
+      console.log(to)
+    })
     return {
       ...toRefs(state),
       onOpenChange,
