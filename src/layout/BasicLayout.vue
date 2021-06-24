@@ -2,12 +2,12 @@
   <a-layout id="vite-layout">
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo" />
-      <app-menu :menus="menus" />
+      <app-menu :menus="menus" :collapsed="collapsed" />
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="trigger" />
+        <menu-fold-outlined v-else class="trigger" @click="trigger" />
         <right-content :top-menu="layout === 'topmenu'" :is-mobile="isMobile" :theme="theme" />
       </a-layout-header>
       <a-layout-content class="vite-content">
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import { RouteRecordRaw } from 'vue-router';
 import AppMenu from "./menu.vue";
 import BasicLink from "./BasicLink.vue";
@@ -57,11 +57,14 @@ export default defineComponent({
       // 是否手机模式
       isMobile: false,
       // menus: routes.filter((r) => r.meta && !r.meta.hidden),
-      menus: getRoutes(routes)
+      menus: getRoutes(routes),
+      collapsed: false,
     })
+
+    const trigger = () => (settings.collapsed = !settings.collapsed)
     return {
-      ...toRaw(settings),
-      collapsed: ref<boolean>(false),
+      ...toRefs(settings),
+      trigger,
     };
   },
 });

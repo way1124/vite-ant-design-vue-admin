@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw, RouteMeta } from "vue-router";
 
 import { BasicLayout, UserLayout } from "@/layout";
+import SettingsLayout from "@/views/Account/settings/index.vue";
 
 export const constantRouterMap: RouteRecordRaw[] = [
   {
@@ -130,7 +131,7 @@ export const routes: RouteRecordRaw[] = [
       icon: "UserOutlined",
       title: "account",
     },
-    redirect: '/account/center',
+    // redirect: '/account/center',
     children: [
       {
         path: "/account/center",
@@ -148,7 +149,7 @@ export const routes: RouteRecordRaw[] = [
           icon: "",
           title: "settings",
         },
-        component: () => import("@/views/Account/settings/index.vue"),
+        component: SettingsLayout,
         redirect: '/account/settings/base',
         children: [
           {
@@ -160,22 +161,15 @@ export const routes: RouteRecordRaw[] = [
               title: "基本设置",
             }
           },
-          // {
-          //   path: '/account/settings/security',
-          //   name: "SecuritySettings",
-          //   component: () => import("@/views/Account/settings/Security.vue"),
-          //   meta: {
-          //     hidden: true,
-          //   }
-          // },
-          // {
-          //   path: '/account/settings/custom',
-          //   name: "CustomSettings",
-          //   component: () => import("@/views/Account/settings/Custom.vue"),
-          //   meta: {
-          //     hidden: true,
-          //   }
-          // },
+          {
+            path: '/account/settings/security',
+            name: "SecuritySettings",
+            component: () => import("@/views/Account/settings/Security.vue"),
+            meta: {
+              hidden: true,
+              title: "安全设置",
+            }
+          },
           {
             path: '/account/settings/binding',
             name: "BindingSettings",

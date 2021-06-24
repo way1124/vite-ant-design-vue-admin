@@ -20,11 +20,6 @@
                 安全设置
               </router-link>
             </a-menu-item>
-            <a-menu-item key="/account/settings/custom">
-              <router-link to="/account/settings/custom">
-                个性化
-              </router-link>
-            </a-menu-item>
             <a-menu-item key="/account/settings/binding">
               <router-link to="/account/settings/binding">
                 账户绑定
@@ -58,7 +53,7 @@ export default defineComponent({
   components: { BasicLink },
   setup() {
     const router: Router = useRouter()
-    console.log(router.currentRoute.value.path)
+    // console.log(router.currentRoute.value.path)
     const state = reactive({
       // horizontal  inline
       mode: 'inline',

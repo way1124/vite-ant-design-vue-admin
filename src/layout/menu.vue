@@ -8,16 +8,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, PropType } from "vue";
-import { RouteRecordRaw, useRouter, RouteLocationNormalizedLoaded, onBeforeRouteUpdate } from "vue-router";
+import { defineComponent, ref, reactive, toRefs, PropType, watch } from "vue";
+import { RouteRecordRaw, useRoute } from "vue-router";
 
 import AppMenuItem from "./menuItem.vue";
 import AppSubMenu from "./subMenu.vue";
 
-function getPath() {
-  const value: RouteLocationNormalizedLoaded = useRouter().currentRoute.value
-  const matched: string[] = value.matched.map(r => r.path)
-  return matched
+function useMatchedPaths() {
+  const route = useRoute()
+  const paths = route.matched.map(r => r.path)
+  return paths
+}
+
+function useRootSubmenuKeys(menus: RouteRecordRaw[]) {
+  return menus.map((r) => {
+    if (r.children) {
+      return r.path;
+    }
+  })
 }
 
 export default defineComponent({
@@ -31,19 +39,21 @@ export default defineComponent({
       type: Array as PropType<RouteRecordRaw[]>,
       required: true,
     },
-    
+    collapsed: {
+      type: Boolean as PropType<Boolean>,
+      required: true,
+    },
   },
   setup(props) {
-    const matched = getPath()
+    const matched = useMatchedPaths()
+    const router = useRoute()
 
     const state = reactive({
-      rootSubmenuKeys: props.menus.map((r) => {
-        if (r.children) {
-          return r.path;
-        }
-      }),
+      rootSubmenuKeys: useRootSubmenuKeys(props.menus),
       openKeys: matched,
       selectedKeys: matched,
+      collapsed: false,
+      menus: props.menus,
     });
     const onOpenChange = (openKeys: string[]) => {
       const latestOpenKey = openKeys.find(
@@ -56,14 +66,15 @@ export default defineComponent({
       }
     };
 
-    onBeforeRouteUpdate(to => {
-      console.log(to)
+    watch([() => router.matched, props], ([value, props]) => {
+      const values = value.map(r => r.path)
+      state.openKeys = !props.collapsed ? values : []
+      state.selectedKeys = values
     })
+
     return {
       ...toRefs(state),
       onOpenChange,
-      collapsed: ref<boolean>(false),
-      menus: props.menus,
     };
   },
 });
