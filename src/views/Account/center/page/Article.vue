@@ -41,21 +41,9 @@
 import { defineComponent, onMounted, reactive, toRaw } from 'vue';
 import { ArticleListContent } from "@/components/ArticleListContent";
 import IconText from "./IconText.vue";
+import { IArticle } from './types';
 
 import { get } from "@/utils/request";
-
-interface IArticle {
-  id: string;
-  description: string;
-  owner: string;
-  avatar: string;
-  href: string;
-  updatedAt: string;
-  star: string;
-  like: string;
-  message: string;
-  title: string;
-}
 
 interface IState {
   loading: boolean;

@@ -70,6 +70,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 
+import { ISource } from './types';
 import { get } from "@/utils/request";
 
 function NumberFormat(value: number) {
@@ -80,21 +81,12 @@ function NumberFormat(value: number) {
   return intPartFormat;
 }
 
-type ISource = {
-  title: string;
-  avatar: string;
-  activeUser: number;
-  newUser: number;
-};
-
 export default defineComponent({
   name: "AppPage",
   setup() {
     const dataSource = ref<ISource[]>([])
     const getFakeList = () => {
-      get<ISource[]>('/api/fake_list').then(r => {
-        dataSource.value = r
-      })
+      get<ISource[]>('/api/fake_list').then(r => dataSource.value = r)
     }
     onMounted(getFakeList)
     

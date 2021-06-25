@@ -3,6 +3,9 @@ import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw, R
 import { BasicLayout, UserLayout } from "@/layout";
 import SettingsLayout from "@/views/Account/settings/index.vue";
 
+// const files = import.meta.glob('./../views/Account/center/*.vue');
+// console.log(files)
+
 export const constantRouterMap: RouteRecordRaw[] = [
   {
     path: '/user',
@@ -13,17 +16,17 @@ export const constantRouterMap: RouteRecordRaw[] = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Login/index.vue')
+        component: () => import('@/views/User/Login/index.vue'),
       },
       // {
       //   path: 'register',
       //   name: 'register',
-      //   component: () => import(/* webpackChunkName: "user" */ '@/views/User/Register')
+      //   component: () => import('@/views/User/Register')
       // },
       // {
       //   path: 'register-result',
       //   name: 'registerResult',
-      //   component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+      //   component: () => import('@/views/user/RegisterResult')
       // },
       // {
       //   path: 'recover',

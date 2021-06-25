@@ -8,25 +8,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, PropType, watch } from "vue";
-import { RouteRecordRaw, useRoute } from "vue-router";
+import { defineComponent, reactive, toRefs, PropType, watch } from "vue";
+import { RouteRecordRaw } from "vue-router";
 
 import AppMenuItem from "./menuItem.vue";
 import AppSubMenu from "./subMenu.vue";
-
-function useMatchedPaths() {
-  const route = useRoute()
-  const paths = route.matched.map(r => r.path)
-  return paths
-}
-
-function useRootSubmenuKeys(menus: RouteRecordRaw[]) {
-  return menus.map((r) => {
-    if (r.children) {
-      return r.path;
-    }
-  })
-}
+import { IAppKeys } from './types';
 
 export default defineComponent({
   name: "AppMenu",
@@ -39,19 +26,17 @@ export default defineComponent({
       type: Array as PropType<RouteRecordRaw[]>,
       required: true,
     },
-    collapsed: {
-      type: Boolean as PropType<Boolean>,
+    propsKeys: {
+      type: Object as PropType<IAppKeys>,
       required: true,
     },
   },
   setup(props) {
-    const matched = useMatchedPaths()
-    const router = useRoute()
 
     const state = reactive({
-      rootSubmenuKeys: useRootSubmenuKeys(props.menus),
-      openKeys: matched,
-      selectedKeys: matched,
+      rootSubmenuKeys: props.propsKeys.rootSubmenuKeys,
+      openKeys: props.propsKeys.openKeys,
+      selectedKeys: props.propsKeys.selectedKeys,
       collapsed: false,
       menus: props.menus,
     });
@@ -66,10 +51,9 @@ export default defineComponent({
       }
     };
 
-    watch([() => router.matched, props], ([value, props]) => {
-      const values = value.map(r => r.path)
-      state.openKeys = !props.collapsed ? values : []
-      state.selectedKeys = values
+    watch(props.propsKeys, (propsKeys) => {
+      state.openKeys = propsKeys.openKeys
+      state.selectedKeys = propsKeys.selectedKeys
     })
 
     return {
