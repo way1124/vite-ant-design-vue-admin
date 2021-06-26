@@ -70,8 +70,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 
-import { ISource } from './types';
-import { get } from "@/utils/request";
+import { ISource } from '../center.interface';
+import { getFakeList } from '../server';
 
 function NumberFormat(value: number) {
   if (!value) {
@@ -85,10 +85,10 @@ export default defineComponent({
   name: "AppPage",
   setup() {
     const dataSource = ref<ISource[]>([])
-    const getFakeList = () => {
-      get<ISource[]>('/api/fake_list').then(r => dataSource.value = r)
+    const getList = () => {
+      getFakeList<ISource[]>().then(r => dataSource.value = r)
     }
-    onMounted(getFakeList)
+    onMounted(getList)
     
     return {
       dataSource,

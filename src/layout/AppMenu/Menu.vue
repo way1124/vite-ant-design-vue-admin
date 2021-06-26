@@ -11,9 +11,9 @@
 import { defineComponent, reactive, toRefs, PropType, watch } from "vue";
 import { RouteRecordRaw } from "vue-router";
 
-import AppMenuItem from "./menuItem.vue";
-import AppSubMenu from "./subMenu.vue";
-import { IAppKeys } from './types';
+import AppMenuItem from "./MenuItem.vue";
+import AppSubMenu from "./SubMenu.vue";
+import { IAppKeys } from './menu.interface';
 
 export default defineComponent({
   name: "AppMenu",

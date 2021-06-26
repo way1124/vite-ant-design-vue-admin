@@ -13,19 +13,19 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
-import { get } from "@/utils/request";
 
-import { IProject } from "./types";
+import { IProject } from '../center.interface';
+import { getFakeList } from '../server';
 
 export default defineComponent({
   name: "ProjectPage",
   setup() {
     const data = ref<IProject[]>([]);
-    const getFakeList = () => {
-      get<IProject[]>("/api/fake_list").then((r) => (data.value = r));
+    const getList = () => {
+      getFakeList<IProject[]>().then((r) => (data.value = r));
     };
 
-    onMounted(getFakeList);
+    onMounted(getList);
 
     return { data };
   },

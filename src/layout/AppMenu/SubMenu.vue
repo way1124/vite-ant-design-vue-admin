@@ -20,7 +20,7 @@
 import { defineComponent, PropType } from 'vue'
 import { RouteRecordRaw } from 'vue-router';
 
-import AppMenuItem from './menuItem.vue';
+import AppMenuItem from './MenuItem.vue';
 
 export default defineComponent({
   name: "AppSubMenu",

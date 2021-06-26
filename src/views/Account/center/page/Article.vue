@@ -41,9 +41,9 @@
 import { defineComponent, onMounted, reactive, toRaw } from 'vue';
 import { ArticleListContent } from "@/components/ArticleListContent";
 import IconText from "./IconText.vue";
-import { IArticle } from './types';
 
-import { get } from "@/utils/request";
+import { IArticle } from '../center.interface';
+import { getFakeList } from '../server';
 
 interface IState {
   loading: boolean;
@@ -64,14 +64,14 @@ export default defineComponent({
       data: [],
     })
 
-    const getFakeList = () => {
-      get<IArticle[]>('/api/fake_list').then(r => {
+    const getList = () => {
+      getFakeList<IArticle[]>().then(r => {
         state.data = r
         state.loading = false
       })
     }
 
-    onMounted(getFakeList)
+    onMounted(getList)
 
     return {
       state
