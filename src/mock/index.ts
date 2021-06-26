@@ -1,6 +1,6 @@
 import Mock from 'mockjs';
 
-import { userInfo } from './user';
+import { userInfo, loginAccount } from './user';
 import { articleList } from './article';
 
 Mock.mock('/api/list','get',{"data": [
@@ -10,5 +10,6 @@ Mock.mock('/api/list','get',{"data": [
 	}
 ]})
 
+Mock.mock('/api/login/account', 'post', loginAccount)
 Mock.mock('/api/currentUser', 'get', userInfo)
 Mock.mock('/api/fake_list', 'get', articleList)

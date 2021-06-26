@@ -15,7 +15,7 @@ export type Result = {
 
 export async function Login(params: FormState) {
   try {
-    const data = await post<Result>('https://proapi.azurewebsites.net/api/login/account', params)
+    const data = await post<Result>('/api/login/account', params)
     return data
   } catch (error) {
     return {} as Result

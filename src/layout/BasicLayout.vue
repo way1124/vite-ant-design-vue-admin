@@ -1,17 +1,21 @@
 <template>
   <a-layout id="vite-layout">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible class="vite-sider">
       <div class="logo" />
-      <app-menu :menus="menus" />
+      <app-menu :menus="menus" :propsKeys="propsKeys" />
     </a-layout-sider>
-    <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+    <a-layout class="vite-main" :style="{ marginLeft }">
+      <a-layout-header class="vite-header">
+        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="trigger" />
+        <menu-fold-outlined v-else class="trigger" @click="trigger" />
         <right-content :top-menu="layout === 'topmenu'" :is-mobile="isMobile" :theme="theme" />
       </a-layout-header>
-      <a-layout-content class="vite-content">
-        <basic-link style="flex: 1;" />
+      <a-layout-content>
+        <a-page-header style="background: #fff;" title="Title" :breadcrumb="{ routes }" sub-title="This is a subtitle" />
+        <div class="vite-content">
+          <basic-link style="flex: 1;" />
+        </div>
+        
         <a-layout-footer style="text-align: center">
           ©2021 Created by Vexth
         </a-layout-footer>
@@ -21,10 +25,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRaw } from "vue";
-import { RouteRecordRaw } from 'vue-router';
-import AppMenu from "./menu.vue";
+import { defineComponent, reactive, toRefs, watch } from "vue";
+import { useRoute, RouteRecordRaw, RouteLocationMatched } from 'vue-router';
+
 import BasicLink from "./BasicLink.vue";
+import { AppMenu } from './AppMenu';
+import { IAppKeys } from './AppMenu/types';
 
 import { RightContent } from "@/components/GlobalHeader";
 
@@ -41,6 +47,14 @@ function getRoutes(routes: RouteRecordRaw[]) {
   })
 }
 
+function useRootSubmenuKeys(menus: RouteRecordRaw[]) {
+  return menus.filter(r => r.children).map((r) => r.path)
+}
+
+function useMatchedRoutes(matched: RouteLocationMatched[]) {
+  return matched.map(r => ({path: r.path, breadcrumbName: r.meta.title}))
+}
+
 export default defineComponent({
   name: "BasicLayout",
   components: {
@@ -49,6 +63,14 @@ export default defineComponent({
     RightContent,
   },
   setup() {
+    const route = useRoute()
+
+    const menus = getRoutes(routes)
+    const rootSubmenuKeys = useRootSubmenuKeys(menus)
+    const paths = route.matched.map(r => r.path)
+
+    const matchedRoutes = useMatchedRoutes(route.matched)
+
     const settings = reactive({
       // 布局类型
       layout: defaultSettings.layout, // 'sidemenu', 'topmenu'
@@ -56,12 +78,34 @@ export default defineComponent({
       theme: defaultSettings.navTheme,
       // 是否手机模式
       isMobile: false,
-      // menus: routes.filter((r) => r.meta && !r.meta.hidden),
-      menus: getRoutes(routes)
+      menus,
+      collapsed: false,
+      routes: matchedRoutes,
+      marginLeft: '200px'
     })
+
+    const propsKeys = reactive<IAppKeys>({
+      rootSubmenuKeys,
+      openKeys: paths,
+      selectedKeys: paths,
+    })
+
+    const trigger = () => {
+      settings.collapsed = !settings.collapsed
+      settings.marginLeft = settings.collapsed ? '80px' : '200px'
+    }
+
+    watch([() => route.matched, () => settings.collapsed], ([matched, collapsed]) => {
+      const values = matched.map(r => r.path)
+      propsKeys.openKeys = collapsed ? [] : values
+      propsKeys.selectedKeys = values
+      settings.routes = useMatchedRoutes(matched)
+    })
+
     return {
-      ...toRaw(settings),
-      collapsed: ref<boolean>(false),
+      ...toRefs(settings),
+      propsKeys,
+      trigger,
     };
   },
 });
@@ -70,8 +114,26 @@ export default defineComponent({
 <style lang="less" scoped>
 
 #vite-layout {
-  height: inherit;
-  // min-height: 100vh;
+  min-height: 100vh;
+
+  .vite-sider {
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0
+  }
+
+  .vite-main {
+    transition: all 0.2s;
+    .vite-header {
+      background: #fff;
+      padding: 0;
+      box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+      z-index: 9;
+      position: sticky;
+      top: 0;
+    }
+  }
 
   .logo {
     height: 32px;

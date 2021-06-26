@@ -1,6 +1,10 @@
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw, RouteMeta } from "vue-router";
 
 import { BasicLayout, UserLayout } from "@/layout";
+import SettingsLayout from "@/views/Account/settings/index.vue";
+
+// const files = import.meta.glob('./../views/Account/center/*.vue');
+// console.log(files)
 
 export const constantRouterMap: RouteRecordRaw[] = [
   {
@@ -12,17 +16,17 @@ export const constantRouterMap: RouteRecordRaw[] = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Login/index.vue')
+        component: () => import('@/views/User/Login/index.vue'),
       },
       // {
       //   path: 'register',
       //   name: 'register',
-      //   component: () => import(/* webpackChunkName: "user" */ '@/views/User/Register')
+      //   component: () => import('@/views/User/Register')
       // },
       // {
       //   path: 'register-result',
       //   name: 'registerResult',
-      //   component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+      //   component: () => import('@/views/user/RegisterResult')
       // },
       // {
       //   path: 'recover',
@@ -130,7 +134,7 @@ export const routes: RouteRecordRaw[] = [
       icon: "UserOutlined",
       title: "account",
     },
-    redirect: '/account/center',
+    // redirect: '/account/center',
     children: [
       {
         path: "/account/center",
@@ -148,7 +152,7 @@ export const routes: RouteRecordRaw[] = [
           icon: "",
           title: "settings",
         },
-        component: () => import("@/views/Account/settings/index.vue"),
+        component: SettingsLayout,
         redirect: '/account/settings/base',
         children: [
           {
@@ -160,22 +164,15 @@ export const routes: RouteRecordRaw[] = [
               title: "基本设置",
             }
           },
-          // {
-          //   path: '/account/settings/security',
-          //   name: "SecuritySettings",
-          //   component: () => import("@/views/Account/settings/Security.vue"),
-          //   meta: {
-          //     hidden: true,
-          //   }
-          // },
-          // {
-          //   path: '/account/settings/custom',
-          //   name: "CustomSettings",
-          //   component: () => import("@/views/Account/settings/Custom.vue"),
-          //   meta: {
-          //     hidden: true,
-          //   }
-          // },
+          {
+            path: '/account/settings/security',
+            name: "SecuritySettings",
+            component: () => import("@/views/Account/settings/Security.vue"),
+            meta: {
+              hidden: true,
+              title: "安全设置",
+            }
+          },
           {
             path: '/account/settings/binding',
             name: "BindingSettings",

@@ -5,7 +5,7 @@
         <template #cover>
           <img alt="example" :src="item.cover" />
         </template>
-        <a-card-meta :title="item.title" :description="item.subDescription"></a-card-meta>
+        <a-card-meta :title="item.title" :description="item.subDescription" />
       </a-card>
     </a-col>
   </a-row>
@@ -15,23 +15,19 @@
 import { defineComponent, ref, onMounted } from "vue";
 import { get } from "@/utils/request";
 
-interface IProject {}
+import { IProject } from "./types";
 
 export default defineComponent({
   name: "ProjectPage",
   setup() {
-    const data = ref([]);
+    const data = ref<IProject[]>([]);
     const getFakeList = () => {
-      get("/api/fake_list").then((r) => {
-        data.value = r as any;
-      });
+      get<IProject[]>("/api/fake_list").then((r) => (data.value = r));
     };
 
     onMounted(getFakeList);
 
-    return {
-      data,
-    };
+    return { data };
   },
 });
 </script>
