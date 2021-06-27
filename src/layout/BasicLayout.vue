@@ -1,24 +1,20 @@
 <template>
   <a-layout id="vite-layout">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible class="vite-sider">
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible :class="`${fixSiderbar ? 'vite-sider' : ''}`">
       <div class="logo" />
       <app-menu :menus="menus" :propsKeys="propsKeys" />
     </a-layout-sider>
-    <a-layout class="vite-main" :style="{ marginLeft }">
-      <a-layout-header class="vite-header">
+    <a-layout class="vite-main" :style="{ marginLeft: fixSiderbar ? marginLeft : null }">
+      <a-layout-header :class="`vite-header ${fixedHeader ? 'vite-header-fixedHeader' : ''}`">
         <menu-unfold-outlined v-if="collapsed" class="trigger" @click="trigger" />
         <menu-fold-outlined v-else class="trigger" @click="trigger" />
         <right-content :top-menu="layout === 'topmenu'" :is-mobile="isMobile" :theme="theme" />
       </a-layout-header>
       <a-layout-content>
-        <a-page-header style="background: #fff;" title="Title" :breadcrumb="{ routes }" sub-title="This is a subtitle" />
-        <div class="vite-content">
-          <basic-link style="flex: 1;" />
-        </div>
-        
-        <a-layout-footer style="text-align: center">
-          ©2021 Created by Vexth
-        </a-layout-footer>
+        <app-global-content>
+          <template #content><basic-link /></template>
+        </app-global-content>
+        <a-layout-footer v-if="pageFooter" class="vite-footer">{{pageFooter}}</a-layout-footer>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -35,6 +31,7 @@ import { AppMenu } from './AppMenu';
 import { IAppKeys } from './AppMenu/types';
 
 import { RightContent } from "@/components/GlobalHeader";
+import { AppGlobalContent } from "@/components/GlobalContent";
 
 import { routes } from "@/router";
 
@@ -63,6 +60,7 @@ export default defineComponent({
     AppMenu,
     BasicLink,
     RightContent,
+    AppGlobalContent,
   },
   setup() {
     const route = useRoute()
@@ -80,9 +78,11 @@ export default defineComponent({
       theme: defaultSettings.navTheme,
       // 是否手机模式
       isMobile: false,
+      fixedHeader: defaultSettings.fixedHeader,
+      fixSiderbar: defaultSettings.fixSiderbar,
+      pageFooter: defaultSettings.footer,
       menus,
       collapsed: false,
-      routes: matchedRoutes,
       marginLeft: '200px'
     })
 
@@ -101,7 +101,7 @@ export default defineComponent({
       const values = matched.map(r => r.path)
       propsKeys.openKeys = collapsed ? [] : values
       propsKeys.selectedKeys = values
-      settings.routes = useMatchedRoutes(matched)
+      // pageHeader.breadcrumb.routes = useMatchedRoutes(matched)
     })
 
     return {

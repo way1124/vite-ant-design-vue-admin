@@ -9,7 +9,7 @@
  * contentWidth - 内容区布局： 流式 |  固定
  *
  * storageOptions: {} - Vue-ls 插件配置项 (localStorage/sessionStorage)
- *
+ * footer - 底部
  */
 
 export default {
@@ -23,9 +23,10 @@ export default {
   menu: {
     locale: true,
   },
-  title: "Ant Design Pro",
+  title: "vite-ant-design-vue-admin",
   pwa: false,
   iconfontUrl: "",
+  footer: "©2021 Created by Vexth",
   // production:
   //   process.env.NODE_ENV === "production" &&
   //   process.env.VUE_APP_PREVIEW !== "true",
