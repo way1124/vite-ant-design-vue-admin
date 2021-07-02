@@ -66,15 +66,23 @@
         </a-list-item>
       </a-list>
     </a-card>
+		<a-modal v-model:visible="visible" :title="title" @ok="handleOk" @cancel="handleCancel">
+			<template #footer>
+        <a-button key="back" @click="handleCancel">Return</a-button>
+        <a-button key="submit" type="primary" :loading="loading" @click="handleOk">Submit</a-button>
+      </template>
+      <task-form :record="record" ref="taskForm" />
+    </a-modal>
   </page-header-wrapper>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive, ref, toRefs } from 'vue'
 
 import { PageHeaderWrapper } from '@/layout/PageHeaderWrapper';
 
 import Info from './Info.vue';
+import TaskForm from './TaskForm.vue';
 
 const data: any[] = []
 data.push({
@@ -133,67 +141,53 @@ export default defineComponent({
 	components: {
     PageHeaderWrapper,
 		Info,
+		TaskForm,
   },
 	setup() {
+		const taskForm = ref()
+		const basicListState = reactive({
+			data,
+			status: 'all',
+			visible: false,
+			loading: false,
+			title: '',
+			record: {}
+		})
+		const handleOk = () => {
+			taskForm.value.handleSubmit().then((value: any) => {
+				console.log(value)
+				basicListState.loading = true
+				setTimeout(() => {
+					basicListState.loading = false
+					handleCancel()
+				}, 1000)
+			}).catch((error: any) => {
+				console.log(error)
+			})
+		}
 		const add = () => {
-      // this.$dialog(TaskForm,
-      //   // component props
-      //   {
-      //     record: {},
-      //     on: {
-      //       ok () {
-      //         console.log('ok 回调')
-      //       },
-      //       cancel () {
-      //         console.log('cancel 回调')
-      //       },
-      //       close () {
-      //         console.log('modal close 回调')
-      //       }
-      //     }
-      //   },
-      //   // modal props
-      //   {
-      //     title: '新增',
-      //     width: 700,
-      //     centered: true,
-      //     maskClosable: false,
-      //     drag: true
-      //   })
+			basicListState.title = '新增'
+			basicListState.visible = true
+			basicListState.record = {}
     }
 
 		const edit = (record: any) => {
       console.log('record', record)
-      // this.$dialog(TaskForm,
-      //   // component props
-      //   {
-      //     record,
-      //     on: {
-      //       ok () {
-      //         console.log('ok 回调')
-      //       },
-      //       cancel () {
-      //         console.log('cancel 回调')
-      //       },
-      //       close () {
-      //         console.log('modal close 回调')
-      //       }
-      //     }
-      //   },
-      //   // modal props
-      //   {
-      //     title: '操作',
-      //     width: 700,
-      //     centered: true,
-      //     maskClosable: false,
-      //     drag: true
-      //   })
+			basicListState.visible = true
+			basicListState.record = record
+			basicListState.title = '操作'
     }
+		const handleCancel = () => {
+			basicListState.visible = false
+			basicListState.record = {}
+		}
 		return {
-			data,
-			status: 'all',
+			taskForm,
+			...toRefs(basicListState),
 			add,
 			edit,
+			handleOk,
+			handleCancel,
 		}
 	},
 })

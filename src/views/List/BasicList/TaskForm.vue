@@ -4,12 +4,12 @@
       <a-input v-model:value="formState.title" />
     </a-form-item>
     <a-form-item label="开始时间" :labelCol="labelCol" :wrapperCol="wrapperCol" name="startAt">
-      <a-date-picker style="width: 100%" valueFormat="YYYY-MM-DD HH:mm" v-model:value="formState.startAt" />
+      <a-date-picker style="width: 100%" format="YYYY-MM-DD HH:mm" v-model:value="formState.startAt" />
     </a-form-item>
     <a-form-item label="任务负责人" :labelCol="labelCol" :wrapperCol="wrapperCol" name="owner">
       <a-select v-model:value="formState.owner">
-        <a-select-option :value="0">付晓晓</a-select-option>
-        <a-select-option :value="1">周毛毛</a-select-option>
+        <a-select-option value="0">付晓晓</a-select-option>
+        <a-select-option value="1">周毛毛</a-select-option>
       </a-select>
     </a-form-item>
     <a-form-item label="产品描述" :labelCol="labelCol" :wrapperCol="wrapperCol" name="description">
@@ -19,12 +19,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, ref, toRaw } from 'vue';
+import moment, { Moment } from 'moment';
+import { defineComponent, PropType, reactive, ref, toRaw, watch } from 'vue';
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 
 export interface IRecord {
 	title: string;
-	startAt: string;
+	startAt: Moment | undefined;
 	owner: string;
 	description: string;
 }
@@ -49,31 +50,25 @@ export default defineComponent({
 
 		const rules = {
 			title: [{required: true, message: '请输入任务名称'}],
-			startAt: [{required: true, message: '请选择开始时间'}],
-			owner: [{required: true, message: '请选择开始时间'}],
+			startAt: [{required: true, message: '请选择开始时间', type: 'object'}],
+			owner: [{required: true, message: '请选择任务负责人'}],
 		}
 
-		const onOk = () => {
-      console.log('监听了 modal ok 事件')
-      return new Promise(resolve => {
-        resolve(true)
-      })
-    }
-    const onCancel = () => {
-      console.log('监听了 modal cancel 事件')
-      return new Promise(resolve => {
-        resolve(true)
-      })
-    }
+		watch(() => props.record, value => {
+			formState.title = value.title || ''
+			formState.startAt = value.startAt || undefined
+			formState.owner = value.owner || ''
+			formState.description = value.description || ''
+		})
+
     const handleSubmit = () => {
-			formRef.value
-        .validate()
-        .then(() => {
-          console.log('values', formState, toRaw(formState));
-        })
-        .catch((error: ValidateErrorEntity<IRecord>) => {
-          console.log('error', error);
-        });
+			return new Promise((resolve, reject) => {
+				formRef.value
+					.validate()
+					.then((value: IRecord) => resolve(value))
+					.catch((error: ValidateErrorEntity<IRecord>) => reject(error));
+			})
+			
     }
 
 		return {
@@ -88,8 +83,6 @@ export default defineComponent({
 			formRef,
       formState,
 			rules,
-			onOk,
-			onCancel,
 			handleSubmit,
     }
 	}

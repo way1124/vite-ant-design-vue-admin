@@ -163,15 +163,15 @@ export const routes: RouteRecordRaw[] = [
         },
         component: () => import("@/views/List/BasicList/index.vue"),
       },
-      // {
-      //   path: "/form/advanced-form",
-      //   name: "AdvancedForm",
-      //   meta: {
-      //     icon: "",
-      //     title: "AdvancedForm",
-      //   },
-      //   component: () => import("@/views/Form/advancedForm/index.vue"),
-      // },
+      {
+        path: "/list/card-list",
+        name: "CardList",
+        meta: {
+          icon: "",
+          title: "CardList",
+        },
+        component: () => import("@/views/List/CardList/index.vue"),
+      },
     ],
   },
   {
