@@ -1,0 +1,73 @@
+#vite-layout {
+	min-height: 100vh;
+
+	.ant-layout-sider {
+		box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
+		z-index: 99;
+	}
+
+	.vite-sider {
+		overflow: auto;
+		height: 100vh;
+		position: fixed;
+		left: 0;
+
+		&::-webkit-scrollbar {
+			/*滚动条整体样式*/
+			width: 1px; /*高宽分别对应横竖滚动条的尺寸*/
+			height: 1px;
+		}
+	
+		&::-webkit-scrollbar-thumb {
+			/*滚动条里面小方块*/
+			border-radius: 10px;
+			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+			-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+			/* background: #535353; */
+		}
+	
+		&::-webkit-scrollbar-track {
+			/*滚动条里面轨道*/
+			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+			-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+			// background: #ededed;
+			background: #001529;
+		}
+	}
+
+	.vite-main {
+		transition: all 0.2s;
+		.vite-header {
+			background: #fff;
+			padding: 0;
+			box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+			z-index: 9;
+			&-fixedHeader {
+				position: sticky;
+				top: 0;
+			}
+		}
+	}
+
+	.logo {
+		height: 32px;
+		background: rgba(255, 255, 255, 0.3);
+		margin: 16px;
+	}
+
+	.trigger {
+		font-size: 18px;
+		// line-height: 64px;
+		padding: 0 24px;
+		cursor: pointer;
+		transition: color 0.3s;
+		&:hover {
+			color: #1890ff;
+		}
+	}
+
+	.vite-footer {
+		text-align: center;
+	}
+}

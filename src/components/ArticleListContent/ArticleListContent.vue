@@ -1,5 +1,5 @@
 <template>
-  <div class="antd-pro-components-article-list-content-index-listContent">
+  <div class="vite-components-article-listContent">
     <div class="description">
       <slot>
         {{ description }}
@@ -26,7 +26,7 @@ export default defineComponent({
   props: {
     prefixCls: {
       type: String as PropType<String>,
-      default: 'antd-pro-components-article-list-content-index-listContent'
+      default: 'vite-components-article-listContent'
     },
     description: {
       type: String as PropType<String>,
@@ -66,7 +66,7 @@ export default defineComponent({
 // @ant-global-sider-zindex    : 106;
 // @ant-global-header-zindex   : 105;
 
-.antd-pro-components-article-list-content-index-listContent {
+.vite-components-article-listContent {
   .description {
     max-width: 720px;
     line-height: 22px;
@@ -94,7 +94,7 @@ export default defineComponent({
 }
 
 @media screen and (max-width: 480px) {
-  .antd-pro-components-article-list-content-index-listContent {
+  .vite-components-article-listContent {
     .extra {
       & > em {
         display: block;

@@ -1,5 +1,5 @@
 <template>
-  <a-menu theme="dark" mode="inline" :openKeys="openKeys" v-model:selectedKeys="selectedKeys" @openChange="onOpenChange">
+  <a-menu :theme="theme" mode="inline" :openKeys="openKeys" v-model:selectedKeys="selectedKeys" @openChange="onOpenChange">
     <template v-for="r in menus" :key="r.path">
       <app-menu-item v-if="!(r.children && r.children.length !== 0)" :route="r" />
       <app-sub-menu v-else :route="r" />
@@ -11,9 +11,9 @@
 import { defineComponent, reactive, toRefs, PropType, watch } from "vue";
 import { RouteRecordRaw } from "vue-router";
 
-import AppMenuItem from "./menuItem.vue";
-import AppSubMenu from "./subMenu.vue";
-import { IAppKeys } from './types';
+import AppMenuItem from "./MenuItem.vue";
+import AppSubMenu from "./SubMenu.vue";
+import { IAppKeys } from './menu.interface';
 
 export default defineComponent({
   name: "AppMenu",
@@ -28,6 +28,10 @@ export default defineComponent({
     },
     propsKeys: {
       type: Object as PropType<IAppKeys>,
+      required: true,
+    },
+    theme: {
+      type: String as PropType<String>,
       required: true,
     },
   },
@@ -64,4 +68,5 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style lang="less" scoped>
+</style>

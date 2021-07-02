@@ -6,3 +6,5 @@ declare module '*.vue' {
 
 declare module 'mockjs'
 
+declare module 'vue-cropper'
+

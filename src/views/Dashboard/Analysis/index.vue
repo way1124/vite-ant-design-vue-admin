@@ -1,5 +1,7 @@
 <template>
   <div>
+    <a-page-header style="background: #fff;margin: -24px -24px 24px;" title="Title" :breadcrumb="{ routes }" sub-title="This is a subtitle" />
+
     <a-card :bordered="false" class="vite-page-header-card">
       <app-page-header :config="config" :loading="loading" @onSubmit="setPagination"></app-page-header>
     </a-card>
@@ -50,6 +52,21 @@ import { getList, addRule } from "./server";
 import { Result, IColumns } from './data';
 
 import CreateForm from "./modules/CreateForm.vue";
+
+const routes = [
+  {
+    path: 'index',
+    breadcrumbName: 'First-level Menu',
+  },
+  {
+    path: 'first',
+    breadcrumbName: 'Second-level Menu',
+  },
+  {
+    path: 'second',
+    breadcrumbName: 'Third-level Menu',
+  },
+];
 
 const modelProps = reactive({
   visible: false,
@@ -164,6 +181,7 @@ export default defineComponent({
     }
     
     return {
+      routes,
       ...toRefs(state),
       page_card_props,
       modelProps,

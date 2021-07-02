@@ -61,8 +61,8 @@ export function get<T>(url: string, data?: {[key: string]: any}): Promise<T> {
   return request.get<T>(url).then(response => response.data).catch(error => error)
 }
 
-export function post<T>(url: string, data?: {[key: string]: any}): Promise<T> {
-  return request.post<T>(url, data).then(response => response.data).catch(error => error)
+export function post<T>(url: string, data?: {[key: string]: any}, config?: AxiosRequestConfig): Promise<T> {
+  return request.post<T>(url, data, config).then(response => response.data).catch(error => error)
 }
 
 export function put<T>(url: string, data?: {[key: string]: any}): Promise<T> {

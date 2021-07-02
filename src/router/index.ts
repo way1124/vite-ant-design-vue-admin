@@ -72,7 +72,7 @@ export const routes: RouteRecordRaw[] = [
     path: "/",
     component: BasicLayout,
     meta: {
-      icon: "AppstoreAddOutlined",
+      icon: "HeartOutlined",
       title: "default",
     },
     redirect: '/analysis',
@@ -80,7 +80,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "/analysis",
         meta: {
-          icon: "",
+          icon: "HeartOutlined",
           title: "Analysis",
           buttons: ['新增', '删除', '修改']
         },
@@ -89,7 +89,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "/testWork",
         meta: {
-          icon: "",
+          icon: "HeartOutlined",
           title: "TestWork",
         },
         component: () => import("@/views/Dashboard/TestWork/index.vue"),
@@ -104,26 +104,74 @@ export const routes: RouteRecordRaw[] = [
       icon: "FormOutlined",
       title: "form",
     },
-    redirect: '/form/basicForm',
+    redirect: '/form/basic-form',
     children: [
       {
-        path: "/form/basicForm",
-        name: "basicForm",
+        path: "/form/basic-form",
+        name: "BasicForm",
         meta: {
           icon: "",
-          title: "basicForm",
+          title: "BasicForm",
         },
         component: () => import("@/views/Form/basicForm/index.vue"),
       },
       {
-        path: "/form/stepForm",
-        name: "stepForm",
+        path: "/form/step-form",
+        name: "StepForm",
         meta: {
           icon: "",
-          title: "stepForm",
+          title: "StepForm",
         },
         component: () => import("@/views/Form/stepForm/index.vue"),
       },
+      {
+        path: "/form/advanced-form",
+        name: "AdvancedForm",
+        meta: {
+          icon: "",
+          title: "AdvancedForm",
+        },
+        component: () => import("@/views/Form/advancedForm/index.vue"),
+      },
+    ],
+  },
+  {
+    path: "/list",
+    name: 'list',
+    component: BasicLayout,
+    meta: {
+      icon: "TableOutlined",
+      title: "list",
+    },
+    redirect: '/list/search-table',
+    children: [
+      {
+        path: "/list/search-table",
+        name: "SearchTable",
+        meta: {
+          icon: "",
+          title: "SearchTable",
+        },
+        component: () => import("@/views/List/SearchTable/index.vue"),
+      },
+      {
+        path: "/list/basic-list",
+        name: "BasicList",
+        meta: {
+          icon: "",
+          title: "BasicList",
+        },
+        component: () => import("@/views/List/BasicList/index.vue"),
+      },
+      // {
+      //   path: "/form/advanced-form",
+      //   name: "AdvancedForm",
+      //   meta: {
+      //     icon: "",
+      //     title: "AdvancedForm",
+      //   },
+      //   component: () => import("@/views/Form/advancedForm/index.vue"),
+      // },
     ],
   },
   {

@@ -27,7 +27,14 @@ export default defineComponent({
 </script>
 
 <style>
+/* body {
+  overflow-x: hidden;
+}
 #app {
   height: 100%;
 }
+
+.colorWeak {
+  filter: invert(80%);
+} */
 </style>

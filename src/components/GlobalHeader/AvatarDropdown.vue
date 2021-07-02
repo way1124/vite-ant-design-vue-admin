@@ -106,10 +106,8 @@ export default defineComponent({
 }
 
 .vite-header-avatar {
-  margin: 20px 0;
   margin-right: 8px;
   color: #1890ff;
-  vertical-align: top;
   background: hsla(0,0%,100%,.85);
 }
 </style>

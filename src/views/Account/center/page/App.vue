@@ -3,6 +3,7 @@
     <a-list
       :grid="{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }"
       :dataSource="dataSource"
+      :loading="loading"
     >
       <template #renderItem="{ item }">
         <a-list-item :key="item.title">
@@ -68,10 +69,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent } from "vue";
 
-import { ISource } from './types';
-import { get } from "@/utils/request";
+import { ISource } from '../center.interface';
+import { useServer } from '../use.server';
+
 
 function NumberFormat(value: number) {
   if (!value) {
@@ -84,15 +86,12 @@ function NumberFormat(value: number) {
 export default defineComponent({
   name: "AppPage",
   setup() {
-    const dataSource = ref<ISource[]>([])
-    const getFakeList = () => {
-      get<ISource[]>('/api/fake_list').then(r => dataSource.value = r)
-    }
-    onMounted(getFakeList)
+    const { data, loading } = useServer<ISource[]>()
     
     return {
-      dataSource,
+      dataSource: data,
       NumberFormat,
+      loading,
     };
   },
 });

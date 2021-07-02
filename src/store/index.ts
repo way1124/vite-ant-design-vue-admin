@@ -19,7 +19,7 @@ interface IUseState {
   state: IState;
 }
 export const useState = () => inject<IUseState>(stateSymbol) as IUseState;
-export const provideState = () => provide(stateSymbol, createStore(true));
+export const provideState = () => provide(stateSymbol, createStore(false));
 
 export default {
   version: '0.0.1',

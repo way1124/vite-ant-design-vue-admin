@@ -9,24 +9,44 @@
  * contentWidth - 内容区布局： 流式 |  固定
  *
  * storageOptions: {} - Vue-ls 插件配置项 (localStorage/sessionStorage)
- *
+ * footer - 底部
  */
 
-export default {
-  navTheme: "dark", // theme for nav menu
+export type DefaultSettings = {
+  navTheme: string;
+  primaryColor: string;
+  layout: string;
+  contentWidth: string;
+  fixedHeader: boolean;
+  fixSiderbar: boolean
+  colorWeak: boolean
+  menu: any;
+  headerHeight: number;
+  title: string;
+  pwa: boolean;
+  iconfontUrl?: string;
+  footer: string;
+}
+
+const defaultSettings: DefaultSettings = {
+  navTheme: "dark", // theme for nav menu light dark
   primaryColor: "#F5222D", // primary color of ant design
   layout: "sidemenu", // nav menu position: `sidemenu` or `topmenu`
   contentWidth: "Fluid", // layout of content: `Fluid` or `Fixed`, only works when layout is topmenu
-  fixedHeader: false, // sticky header
-  fixSiderbar: false, // sticky siderbar
+  fixedHeader: true, // sticky header
+  fixSiderbar: true, // sticky siderbar
   colorWeak: false,
   menu: {
-    locale: true,
+    locale: false,
   },
-  title: "Ant Design Pro",
+  headerHeight: 48,
+  title: "vite-ant-design-vue-admin",
   pwa: false,
   iconfontUrl: "",
+  footer: "©2021 Created by Vexth",
   // production:
   //   process.env.NODE_ENV === "production" &&
   //   process.env.VUE_APP_PREVIEW !== "true",
-};
+}
+
+export default defaultSettings;

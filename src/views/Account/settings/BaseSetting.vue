@@ -36,8 +36,7 @@
 
       </a-col>
       <a-col :md="24" :lg="8" :style="{ minHeight: '180px' }">
-        <!-- <div class="ant-upload-preview" @click="$refs.modal.edit(1)" > -->
-        <div class="ant-upload-preview" >
+        <div class="ant-upload-preview" @click="edit">
           <CloudUploadOutlined class="upload-icon" />
           <div class="mask">
             <PlusOutlined />
@@ -47,19 +46,20 @@
       </a-col>
     </a-row>
 
-    <!-- <avatar-modal ref="modal" @ok="setavatar"/> -->
+    <avatar-modal ref="modalRef" @ok="setavatar"/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRaw } from 'vue';
-// import AvatarModal from './AvatarModal.vue'
+import { defineComponent, reactive, ref, toRaw } from 'vue';
+import AvatarModal from './AvatarModal.vue'
 
 export default defineComponent({
   components: {
-    // AvatarModal
+    AvatarModal
   },
   setup() {
+    const modalRef = ref()
     const state = reactive({
       // cropper
       preview: {},
@@ -84,37 +84,17 @@ export default defineComponent({
       state.option.img = url
     }
 
+    const edit = () => {
+      modalRef.value.edit(1)
+    }
+
     return {
+      modalRef,
       ...toRaw(state),
       setavatar,
+      edit,
     }
   }
-  // data () {
-  //   return {
-  //     // cropper
-  //     preview: {},
-  //     option: {
-  //       img: '/avatar2.jpg',
-  //       info: true,
-  //       size: 1,
-  //       outputType: 'jpeg',
-  //       canScale: false,
-  //       autoCrop: true,
-  //       // 只有自动截图开启 宽度高度才生效
-  //       autoCropWidth: 180,
-  //       autoCropHeight: 180,
-  //       fixedBox: true,
-  //       // 开启宽度和高度比例
-  //       fixed: true,
-  //       fixedNumber: [1, 1]
-  //     }
-  //   }
-  // },
-  // methods: {
-  //   setavatar (url) {
-  //     this.option.img = url
-  //   }
-  // }
 })
 </script>
 

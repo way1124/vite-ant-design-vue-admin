@@ -9,17 +9,19 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
+
 
 import { useState } from "@/store";
 
 import { get } from "@/utils/request";
+
 export default defineComponent({
   setup() {
     const { state, action } = useState();
     const visible = ref<boolean>(false);
 
-    get('/api/list').then(r => console.log(r))
+    // get('/api/list').then(r => console.log(r))
 
     const showModal = () => {
       action.updateUser({ status: "ok", type: "account", currentAuthority: "admin" });

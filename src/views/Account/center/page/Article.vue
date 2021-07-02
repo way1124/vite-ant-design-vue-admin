@@ -2,9 +2,9 @@
   <a-list
     size="large"
     rowKey="id"
-    :loading="state.loading"
+    :loading="loading"
     itemLayout="vertical"
-    :dataSource="state.data"
+    :dataSource="data"
   >
     <template #renderItem="{ item }">
       <a-list-item :key="item.id">
@@ -38,18 +38,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRaw } from 'vue';
+import { defineComponent } from 'vue';
 import { ArticleListContent } from "@/components/ArticleListContent";
 import IconText from "./IconText.vue";
-import { IArticle } from './types';
 
-import { get } from "@/utils/request";
-
-interface IState {
-  loading: boolean;
-  loadingMore: boolean;
-  data: IArticle[];
-}
+import { IArticle } from '../center.interface';
+import { useServer } from '../use.server';
 
 export default defineComponent({
   name: "ArticlePage",
@@ -58,23 +52,11 @@ export default defineComponent({
     ArticleListContent,
   },
   setup() {
-    const state = reactive<IState>({
-      loading: true,
-      loadingMore: false,
-      data: [],
-    })
-
-    const getFakeList = () => {
-      get<IArticle[]>('/api/fake_list').then(r => {
-        state.data = r
-        state.loading = false
-      })
-    }
-
-    onMounted(getFakeList)
+    const { data, loading } = useServer<IArticle[]>()
 
     return {
-      state
+      data,
+      loading,
     }
   },
 });

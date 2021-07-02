@@ -1,24 +1,21 @@
 <template>
   <a-layout id="vite-layout">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible class="vite-sider">
+    <a-layout-sider :theme="theme" v-model:collapsed="collapsed" :trigger="null" collapsible :class="`${fixSiderbar ? 'vite-sider' : ''}`">
       <div class="logo" />
-      <app-menu :menus="menus" :propsKeys="propsKeys" />
+      <app-menu :menus="menus" :propsKeys="propsKeys" :theme="theme" />
     </a-layout-sider>
-    <a-layout class="vite-main" :style="{ marginLeft }">
-      <a-layout-header class="vite-header">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="trigger" />
-        <menu-fold-outlined v-else class="trigger" @click="trigger" />
+    <a-layout class="vite-main" :style="{ marginLeft: fixSiderbar ? marginLeft : null }">
+      <a-layout-header :style="{ height: `${headerHeight}px`, lineHeight: `${headerHeight}px` }" :class="`vite-header ${fixedHeader ? 'vite-header-fixedHeader' : ''}`">
+        <menu-unfold-outlined v-if="collapsed" :style="{ lineHeight: `${headerHeight}px` }" class="trigger" @click="trigger" />
+        <menu-fold-outlined v-else :style="{ lineHeight: `${headerHeight}px` }" class="trigger" @click="trigger" />
         <right-content :top-menu="layout === 'topmenu'" :is-mobile="isMobile" :theme="theme" />
       </a-layout-header>
       <a-layout-content>
-        <a-page-header style="background: #fff;" title="Title" :breadcrumb="{ routes }" sub-title="This is a subtitle" />
-        <div class="vite-content">
-          <basic-link style="flex: 1;" />
-        </div>
-        
-        <a-layout-footer style="text-align: center">
-          ©2021 Created by Vexth
-        </a-layout-footer>
+        <app-global-content :class="contentWidth">
+          <template #content><basic-link /></template>
+        </app-global-content>
+        <setting-drawer />
+        <a-layout-footer v-if="pageFooter" class="vite-footer">{{pageFooter}}</a-layout-footer>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -30,13 +27,17 @@ import { useRoute, RouteRecordRaw, RouteLocationMatched } from 'vue-router';
 
 import BasicLink from "./BasicLink.vue";
 import { AppMenu } from './AppMenu';
-import { IAppKeys } from './AppMenu/types';
+import { IAppKeys } from './AppMenu/menu.interface';
 
 import { RightContent } from "@/components/GlobalHeader";
+import { AppGlobalContent } from "@/components/GlobalContent";
+import { SettingDrawer } from "@/components/SettingDrawer";
 
 import { routes } from "@/router";
 
 import defaultSettings from "@/config/settings";
+
+import { action, state } from "@/store";
 
 function getRoutes(routes: RouteRecordRaw[]) {
   return routes.filter((r) => r.meta && !r.meta.hidden).map(r => {
@@ -61,6 +62,8 @@ export default defineComponent({
     AppMenu,
     BasicLink,
     RightContent,
+    AppGlobalContent,
+    SettingDrawer,
   },
   setup() {
     const route = useRoute()
@@ -73,14 +76,18 @@ export default defineComponent({
 
     const settings = reactive({
       // 布局类型
-      layout: defaultSettings.layout, // 'sidemenu', 'topmenu'
+      layout: state.layout.layout, // 'sidemenu', 'topmenu'
       // 主题 'dark' | 'light'
-      theme: defaultSettings.navTheme,
+      theme: state.layout.navTheme,
       // 是否手机模式
       isMobile: false,
+      fixedHeader: state.layout.fixedHeader,
+      fixSiderbar: state.layout.fixSiderbar,
+      contentWidth: state.layout.contentWidth,
+      pageFooter: defaultSettings.footer,
+      headerHeight: defaultSettings.headerHeight,
       menus,
-      collapsed: false,
-      routes: matchedRoutes,
+      collapsed: defaultSettings.menu.locale,
       marginLeft: '200px'
     })
 
@@ -93,13 +100,20 @@ export default defineComponent({
     const trigger = () => {
       settings.collapsed = !settings.collapsed
       settings.marginLeft = settings.collapsed ? '80px' : '200px'
+      action.updateLayoutMenuLocale(settings.collapsed)
     }
 
-    watch([() => route.matched, () => settings.collapsed], ([matched, collapsed]) => {
+    watch([() => route.matched, () => settings.collapsed, state], ([matched, collapsed, newState]) => {
       const values = matched.map(r => r.path)
       propsKeys.openKeys = collapsed ? [] : values
       propsKeys.selectedKeys = values
-      settings.routes = useMatchedRoutes(matched)
+      // console.log(navTheme)
+      const { layout } = newState
+      settings.theme = layout.navTheme
+      settings.fixedHeader = layout.fixedHeader
+      settings.fixSiderbar = layout.fixSiderbar
+      settings.contentWidth = layout.contentWidth
+      // pageHeader.breadcrumb.routes = useMatchedRoutes(matched)
     })
 
     return {
@@ -112,79 +126,5 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-
-#vite-layout {
-  min-height: 100vh;
-
-  .vite-sider {
-    overflow: auto;
-    height: 100vh;
-    position: fixed;
-    left: 0
-  }
-
-  .vite-main {
-    transition: all 0.2s;
-    .vite-header {
-      background: #fff;
-      padding: 0;
-      box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
-      z-index: 9;
-      position: sticky;
-      top: 0;
-    }
-  }
-
-  .logo {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.3);
-    margin: 16px;
-  }
-
-  .trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-    &:hover {
-      color: #1890ff;
-    }
-  }
-
-  .vite-content {
-    display: flex;
-    flex-direction: column;
-    /* margin: 24px 16px; */
-    padding: 24px;
-    /* background: rgb(255, 255, 255); */
-    min-height: 280px;
-    overflow-y: auto;
-    transition: all 0.2s;
-  }
-}
-
-.vite-content::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width: 3px; /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-}
-
-.vite-content::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  /* background: #535353; */
-}
-
-.vite-content::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background: #ededed;
-}
-
-.site-layout .site-layout-background {
-  background: #fff;
-}
+@import url('./index.less');
 </style>
