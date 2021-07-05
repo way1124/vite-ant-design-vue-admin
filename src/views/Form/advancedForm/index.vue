@@ -263,35 +263,45 @@ export default defineComponent({
       const repositoryFormRef = repository.value.formRef
       const taskFormRef = task.value.formRef
 
+      const error_list: any[] = []
+
       const repositoryForm = new Promise((resolve, reject) => {
-        repositoryFormRef.validate().then((value: IRepositoryForm) => resolve(value)).catch((err: ValidateErrorEntity<IRepositoryForm>) => reject(err))
+        repositoryFormRef.validate().then((value: IRepositoryForm) => resolve(value)).catch((err: ValidateErrorEntity<IRepositoryForm>) => {
+          error_list.push(...err.errorFields)
+          return reject(err)
+        })
       })
       const taskForm = new Promise((resolve, reject) => {
-        taskFormRef.validate().then((value: ITaskForm) => resolve(value)).catch((err: ValidateErrorEntity<IFormState>) => reject(err))
+        taskFormRef.validate().then((value: ITaskForm) => resolve(value)).catch((err: ValidateErrorEntity<IFormState>) => {
+          error_list.push(...err.errorFields)
+          return reject(err)
+        })
       })
 
       // clean this.errors
       fromState.errors = []
-      Promise.all([repositoryForm, taskForm]).then(values => {
+      Promise.race([taskForm, repositoryForm]).then(values => {
         notification.success({
           message: 'Received values of form:',
           description: JSON.stringify(values)
         })
       }).catch(() => {
-        const errors = Object.assign({}, repositoryFormRef.getFieldsValue(), taskFormRef.getFieldsValue())
-        const tmp = { ...errors }
-        errorList(tmp)
+        const tem = error_list.reduce((pre, cur) => {
+          const name = cur['name'][0]
+          const value = cur['errors'][0]
+          pre[name] = value
+          return pre
+        }, {})
+        errorList(tem)
       })
     }
     const errorList = (errors: any) => {
       if (!errors || errors.length === 0) {
         return
       }
-      fromState.errors = Object.keys(errors)
-        .filter(key => errors[key])
-        .map(key => ({
-          key: key,
-          message: errors[key][0],
+      fromState.errors = Object.keys(errors).filter(key => errors[key]).map(key => ({
+          key,
+          message: errors[key],
           fieldLabel: (fieldLabels as any)[key]
         }))
     }

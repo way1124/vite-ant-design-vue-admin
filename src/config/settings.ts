@@ -38,6 +38,8 @@ const defaultSettings: DefaultSettings = {
   colorWeak: false,
   menu: {
     locale: true,
+    minWith: 80,
+    maxWith: 200,
   },
   headerHeight: 48,
   title: "vite-ant-design-vue-admin",

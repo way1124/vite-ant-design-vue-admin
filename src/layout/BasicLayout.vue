@@ -4,7 +4,7 @@
       <div class="logo" />
       <app-menu :menus="menus" :propsKeys="propsKeys" :theme="theme" />
     </a-layout-sider>
-    <a-layout class="vite-main" :style="{ marginLeft: fixSiderbar ? marginLeft : null }">
+    <a-layout class="vite-main" :style="{ marginLeft: fixSiderbar ? `${marginLeft}px` : null }">
       <a-layout-header :style="{ height: `${headerHeight}px`, lineHeight: `${headerHeight}px` }" :class="`vite-header ${fixedHeader ? 'vite-header-fixedHeader' : ''}`">
         <menu-unfold-outlined v-if="collapsed" :style="{ lineHeight: `${headerHeight}px` }" class="trigger" @click="trigger" />
         <menu-fold-outlined v-else :style="{ lineHeight: `${headerHeight}px` }" class="trigger" @click="trigger" />
@@ -56,8 +56,9 @@ function useMatchedRoutes(matched: RouteLocationMatched[]) {
   return matched.map(r => ({path: r.path, breadcrumbName: r.meta.title}))
 }
 
-function setMarginLeft(collapsed: boolean) {
-  return collapsed ? '80px' : '200px'
+function setLeft(collapsed: boolean) {
+  const { minWith, maxWith } = defaultSettings.menu
+  return collapsed ? minWith : maxWith
 }
 
 export default defineComponent({
@@ -93,7 +94,7 @@ export default defineComponent({
       headerHeight: defaultSettings.headerHeight,
       menus,
       collapsed: defaultSettings.menu.locale,
-      marginLeft: setMarginLeft(defaultSettings.menu.locale)
+      marginLeft: setLeft(defaultSettings.menu.locale)
     })
 
     const propsKeys = reactive<IAppKeys>({
@@ -104,7 +105,7 @@ export default defineComponent({
 
     const trigger = () => {
       settings.collapsed = !settings.collapsed
-      settings.marginLeft = setMarginLeft(settings.collapsed)
+      settings.marginLeft = setLeft(settings.collapsed)
       action.updateLayoutMenuLocale(settings.collapsed)
     }
 

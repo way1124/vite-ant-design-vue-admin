@@ -12,6 +12,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
 
+import settings from '@/config/settings';
+
 export default defineComponent({
   name: 'FooterToolBar',
   props: {
@@ -37,8 +39,9 @@ export default defineComponent({
     }
   },
 	setup(props) {
+    const { minWith, maxWith } = settings.menu
 		return {
-			barWidth: computed(() => props.isMobile ? undefined : `calc(100% - ${props.collapsed ? 80 : props.siderWidth || 200}px)`)
+			barWidth: computed(() => props.isMobile ? undefined : `calc(100% - ${props.collapsed ? minWith : props.siderWidth || maxWith}px)`)
 		}
 	}
 })
