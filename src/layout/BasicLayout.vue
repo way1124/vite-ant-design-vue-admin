@@ -56,6 +56,10 @@ function useMatchedRoutes(matched: RouteLocationMatched[]) {
   return matched.map(r => ({path: r.path, breadcrumbName: r.meta.title}))
 }
 
+function setMarginLeft(collapsed: boolean) {
+  return collapsed ? '80px' : '200px'
+}
+
 export default defineComponent({
   name: "BasicLayout",
   components: {
@@ -88,18 +92,18 @@ export default defineComponent({
       headerHeight: defaultSettings.headerHeight,
       menus,
       collapsed: defaultSettings.menu.locale,
-      marginLeft: '200px'
+      marginLeft: setMarginLeft(defaultSettings.menu.locale)
     })
 
     const propsKeys = reactive<IAppKeys>({
       rootSubmenuKeys,
-      openKeys: paths,
+      openKeys: defaultSettings.menu.locale ? [] : paths,
       selectedKeys: paths,
     })
 
     const trigger = () => {
       settings.collapsed = !settings.collapsed
-      settings.marginLeft = settings.collapsed ? '80px' : '200px'
+      settings.marginLeft = setMarginLeft(settings.collapsed)
       action.updateLayoutMenuLocale(settings.collapsed)
     }
 

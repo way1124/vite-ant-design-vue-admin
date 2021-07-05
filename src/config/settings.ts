@@ -37,7 +37,7 @@ const defaultSettings: DefaultSettings = {
   fixSiderbar: true, // sticky siderbar
   colorWeak: false,
   menu: {
-    locale: false,
+    locale: true,
   },
   headerHeight: 48,
   title: "vite-ant-design-vue-admin",
