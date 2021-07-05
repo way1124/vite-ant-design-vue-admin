@@ -78,16 +78,17 @@ export default defineComponent({
 
     const matchedRoutes = useMatchedRoutes(route.matched)
 
+    const { layout } = state
     const settings = reactive({
       // 布局类型
-      layout: state.layout.layout, // 'sidemenu', 'topmenu'
+      layout: layout.layout, // 'sidemenu', 'topmenu'
       // 主题 'dark' | 'light'
-      theme: state.layout.navTheme,
+      theme: layout.navTheme,
       // 是否手机模式
       isMobile: false,
-      fixedHeader: state.layout.fixedHeader,
-      fixSiderbar: state.layout.fixSiderbar,
-      contentWidth: state.layout.contentWidth,
+      fixedHeader: layout.fixedHeader,
+      fixSiderbar: layout.fixSiderbar,
+      contentWidth: layout.contentWidth,
       pageFooter: defaultSettings.footer,
       headerHeight: defaultSettings.headerHeight,
       menus,
