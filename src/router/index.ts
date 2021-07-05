@@ -175,6 +175,36 @@ export const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: "/profile",
+    name: 'profile',
+    component: BasicLayout,
+    meta: {
+      icon: "UnorderedListOutlined",
+      title: "profile",
+    },
+    redirect: '/profile/search-table',
+    children: [
+      {
+        path: "/profile/basic-profile",
+        name: "BasicProfile",
+        meta: {
+          icon: "",
+          title: "BasicProfile",
+        },
+        component: () => import("@/views/Profile/basic/index.vue"),
+      },
+      {
+        path: "/profile/advanced-profile",
+        name: "AdvancedProfile",
+        meta: {
+          icon: "",
+          title: "AdvancedProfile",
+        },
+        component: () => import("@/views/Profile/advanced/index.vue"),
+      },
+    ],
+  },
+  {
     path: "/account",
     name: 'account',
     component: BasicLayout,

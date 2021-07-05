@@ -2,11 +2,19 @@
 	<div class="page-header-wrapper">
 		<a-page-header :title="title" :breadcrumb="{ routes }" class="page-header">
 			{{content}}
+			<template #extra>
+				<slot name="extra"></slot>
+			</template>
+			<template #footer>
+				<slot name="footer"></slot>
+			</template>
+			<slot name="content"></slot>
 		</a-page-header>
 
 		<div class="vite-content-children">
 			<slot></slot>
 		</div>
+		
 	</div>
 </template>
 

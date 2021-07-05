@@ -137,7 +137,6 @@ export default defineComponent({
     CreateForm,
   },
   setup() {
-
     const { pagination, tableData, loading, handleTableChange, setPagination } = usePaginationData<Result>(getList)
     const state = reactive({
       tableSize: 'default',

@@ -7,3 +7,18 @@ export function tansParams(params: {[key: string]: any}) {
 	})
 	return result
 }
+
+export function parseQueryString(url: string) {
+    url = url == null ? window.location.href : url;
+    const search = url[0] === '?' ? url.substr(1) : url.substring(url.lastIndexOf('?') + 1);
+    if (search === '') return {}
+    const list = search.split('&');
+    const query: {[key: string]: string} = {};
+    for (let i = 0; i < list.length; i++) {
+        let pair = list[i].split('=');
+		if (pair.length === 2 && pair[0] !== "") {
+			query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+		}
+    }
+    return query;
+}
