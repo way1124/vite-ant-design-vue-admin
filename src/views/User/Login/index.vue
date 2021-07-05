@@ -90,7 +90,7 @@ export default defineComponent({
   -moz-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   position: absolute;
-  top: 30%;
+  top: 40%;
   left: 50%;
   &-form {
     border-radius: 6px;
