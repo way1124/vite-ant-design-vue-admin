@@ -4,7 +4,6 @@
     :tab-list="tabList"
     :tab-active-key="tabActiveKey"
     @tabChange="handleTabChange"
-		content=""
   >
     <template #content>
       <a-descriptions size="small" :column="isMobile ? 1 : 2">
@@ -29,7 +28,7 @@
       <a-button type="primary" >主操作</a-button>
     </template>
 
-    <template v-slot:extraContent>
+    <template #extraContent>
       <a-row class="status-list">
         <a-col :xs="12" :sm="12">
           <div class="text">状态</div>
@@ -109,52 +108,25 @@
     </a-card>
 
     <a-card style="margin-top: 24px" :bordered="false" title="用户近半年来电记录">
-      <!-- <div class="no-data"><a-icon type="frown-o"/>暂无数据</div> -->
+      <div class="no-data"><InboxOutlined style="font-size: 18px;" />暂无数据</div>
     </a-card>
 
     <!-- 操作 -->
-    <a-card
-      style="margin-top: 24px"
-      :bordered="false"
-      :tabList="operationTabList"
-      :activeTabKey="operationActiveTabKey"
-      @tabChange="(key) => {this.operationActiveTabKey = key}"
-    >
-      <a-table
-        v-if="operationActiveTabKey === '1'"
-        :columns="operationColumns"
-        :dataSource="operation1"
-        :pagination="false"
-      >
-        <!-- <template
-          slot="status"
-          slot-scope="status">
-          <a-badge :status="status | statusTypeFilter" :text="status | statusFilter"/>
-        </template> -->
+    <a-card style="margin-top: 24px" :bordered="false" :tabList="operationTabList" :activeTabKey="operationActiveTabKey" @tabChange="(key) => operationActiveTabKey = key">
+      <a-table v-if="operationActiveTabKey === '1'" :columns="operationColumns" :dataSource="operation1" :pagination="false">
+        <template #status="{ text }">
+          <a-badge :status="statusTypeFilter(text)" :text="statusFilter(text)"/>
+        </template>
       </a-table>
-      <a-table
-        v-if="operationActiveTabKey === '2'"
-        :columns="operationColumns"
-        :dataSource="operation2"
-        :pagination="false"
-      >
-        <!-- <template
-          slot="status"
-          slot-scope="status">
-          <a-badge :status="status | statusTypeFilter" :text="status | statusFilter"/>
-        </template> -->
+      <a-table v-if="operationActiveTabKey === '2'" :columns="operationColumns" :dataSource="operation2" :pagination="false">
+        <template #status="{ text }">
+          <a-badge :status="statusTypeFilter(text)" :text="statusFilter(text)"/>
+        </template>
       </a-table>
-      <a-table
-        v-if="operationActiveTabKey === '3'"
-        :columns="operationColumns"
-        :dataSource="operation3"
-        :pagination="false"
-      >
-        <!-- <template
-          slot="status"
-          slot-scope="status">
-          <a-badge :status="status | statusTypeFilter" :text="status | statusFilter"/>
-        </template> -->
+      <a-table v-if="operationActiveTabKey === '3'" :columns="operationColumns" :dataSource="operation3" :pagination="false">
+        <template #status="{ text }">
+          <a-badge :status="statusTypeFilter(text)" :text="statusFilter(text)"/>
+        </template>
       </a-table>
     </a-card>
 
@@ -164,7 +136,6 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 import { PageHeaderWrapper } from '@/layout/PageHeaderWrapper';
-// import { baseMixin } from '@/store/app-mixin'
 
 const tabList = [
 	{ key: 'detail', tab: '详情' },
@@ -300,7 +271,6 @@ const operation3 = [
 ]
 export default defineComponent({
   name: 'Advanced',
-  // mixins: [baseMixin],
 	components: {
 		PageHeaderWrapper
 	},
@@ -313,7 +283,8 @@ export default defineComponent({
       operationColumns,
       operation1,
       operation2,
-      operation3
+      operation3,
+			isMobile: false,
 		})
 
 		const statusFilter = (status: string) => {

@@ -99,11 +99,11 @@ export default defineComponent({
       default: false,
     },
     autoCropWidth: {
-      type: [Number, String],
+      type: Number as PropType<number>,
       default: 0,
     },
     autoCropHeight: {
-      type: [Number, String],
+      type: Number as PropType<number>,
       default: 0,
     },
     // 是否开启固定宽高比
@@ -160,18 +160,18 @@ export default defineComponent({
     },
     // 可以压缩图片宽高  默认不超过200
     maxImgSize: {
-      type: [Number, String],
+      type: Number as PropType<number>,
       default: 2000,
     },
     // 倍数  可渲染当前截图框的n倍 0 - 1000;
     enlarge: {
-      type: [Number, String],
+      type: Number as PropType<number>,
       default: 1,
     },
 
     // 自动预览的固定宽度
     preW: {
-      type: [Number, String],
+      type: Number as PropType<number>,
       default: 0,
     },
     /*
@@ -188,13 +188,13 @@ export default defineComponent({
     //限制最小区域,可传1以上的数字和字符串，限制长宽都是这么大
     // 也可以传数组[90,90]
     limitMinSize: {
-      type: [Number, Array, String],
+      type: [Number, Array, String] as PropType<(number | string)[]>,
       default: () => {
         return 10;
       },
     },
 		type: {
-			type: String,
+			type: String as PropType<string>,
 			default: ''
 		}
   },
