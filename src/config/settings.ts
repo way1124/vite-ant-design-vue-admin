@@ -37,7 +37,7 @@ const defaultSettings: DefaultSettings = {
   fixSiderbar: true, // sticky siderbar
   colorWeak: false,
   menu: {
-    locale: true,
+    locale: false,
     minWith: 80,
     maxWith: 200,
   },
